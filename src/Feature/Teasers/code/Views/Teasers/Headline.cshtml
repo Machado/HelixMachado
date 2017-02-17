@@ -1,0 +1,17 @@
+﻿@using Sitecore.Feature.Teasers
+@using Sitecore.Foundation.Alerts
+@using Sitecore.Foundation.Alerts.Extensions
+@using Sitecore.Foundation.SitecoreExtensions.Extensions
+@using Sitecore.Foundation.Theming.Extensions
+@model Sitecore.Mvc.Presentation.RenderingModel
+@if (!Model?.Item?.IsDerived(Templates.TeaserHeadline.ID) ?? true)
+{
+  @Html.PageEditorError(AlertTexts.InvalidDataSourceTemplate(Templates.TeaserHeadline.ID), AlertTexts.InvalidDataSourceTemplateFriendlyMessage, Model.Item?.ID, Model.Rendering.Item?.ID)
+  return;
+}
+
+<div class="headline @Model.Rendering.GetBackgroundClass()">
+  <h2 class="text-center">
+    @Html.Sitecore().Field(Templates.TeaserHeadline.Fields.Title, Model.Item)
+  </h2>
+</div>

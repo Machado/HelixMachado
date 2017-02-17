@@ -1,0 +1,30 @@
+﻿@using Sitecore
+@using Sitecore.Feature.Metadata
+@using Sitecore.Feature.Metadata.Repositories
+@using Sitecore.Foundation.Alerts
+@using Sitecore.Foundation.Alerts.Extensions
+@using Sitecore.Foundation.SitecoreExtensions.Extensions
+@model Sitecore.Mvc.Presentation.RenderingModel
+@if (!Model?.Item?.IsDerived(Templates.PageMetadata.ID) ?? true)
+{
+  @Html.PageEditorError(AlertTexts.InvalidDataSourceTemplate(Templates.PageMetadata.ID), AlertTexts.InvalidDataSourceTemplateFriendlyMessage, Model.Item?.ID, Model.Rendering.Item?.ID)
+  return;
+}
+@{
+  //TODO: Fall back to Title / DisplayName etc
+  //TODO: Move to Controller Rendering
+  var siteMetadata = MetadataRepository.Get(Model.Item);
+  if (siteMetadata == null)
+  {
+    return;
+  }
+}
+<title>@Html.Sitecore().Field(Templates.PageMetadata.Fields.BrowserTitle, Model.Item) @Html.Sitecore().Field(Templates.SiteMetadata.Fields.SiteBrowserTitle, siteMetadata)</title>
+<meta name="keywords" content="@MetadataRepository.GetKeywords(Model.Item)"/>
+<meta name="description" content="@Html.Sitecore().Field(Templates.PageMetadata.Fields.Description, Model.Item)"/>
+@{
+  if (!MainUtil.GetBool(Model.Item[Templates.PageMetadata.Fields.CanIndex], true))
+  {
+    <meta name="robots" content="noindex"/>
+  }
+}
